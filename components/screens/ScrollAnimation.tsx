@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-const ITEM_SIZE = 312;
+const ITEM_SIZE = 412;
 
 const BACKDROPS = [
   "https://images.unsplash.com/photo-1640499900704-b00dd6a1103a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
@@ -16,14 +16,32 @@ const BACKDROPS = [
   "https://images.unsplash.com/photo-1636572481914-a07d36917486?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
 ];
 
-const PLAYER_CARD = [
+const SMALL_CARDS = [
   "https://i.pinimg.com/736x/8b/b6/97/8bb697876599fa66410e00db919b143e.jpg",
-  "https://images.unsplash.com/photo-1596727147705-61a532a659bd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
+  "https://e0.pxfuel.com/wallpapers/571/889/desktop-wallpaper-baby-groot-cool-groot.jpg",
   "https://i.pinimg.com/736x/8b/b6/97/8bb697876599fa66410e00db919b143e.jpg",
-  "https://images.unsplash.com/photo-1596727147705-61a532a659bd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80",
+  "https://e0.pxfuel.com/wallpapers/571/889/desktop-wallpaper-baby-groot-cool-groot.jpg",
 ];
-//[(index - 1) * ITEM_SIZE, index * ITEM_SIZE],
-//  [0, width]
+
+const SONG_LIST = [
+  {
+    song: "Kanaa Yaari",
+    singer: "Kaifi Khalil, Eva B, Wahab Bugati",
+  },
+  {
+    song: "Barish Ka Asar",
+    singer: "Twing Strings",
+  },
+  {
+    song: "Kanaa Yaari",
+    singer: "Kaifi Khalil, Eva B, Wahab Bugati",
+  },
+  {
+    song: "Barish Ka Asar",
+    singer: "Twing Strings",
+  },
+];
+
 const Backdrop = ({
   img,
   scrollX,
@@ -35,20 +53,17 @@ const Backdrop = ({
   scrollX: MotionValue<number>;
   width: number;
 }) => {
-  const transformedWidth = useTransform(
+  const opacity = useTransform(
     scrollX,
     [(index - 1) * ITEM_SIZE, index * ITEM_SIZE],
-    [0, width],
+    [0, 1],
     {
       clamp: true,
     }
   );
 
   return (
-    <motion.div
-      className="absolute inset-0"
-      style={{ width: transformedWidth }}
-    >
+    <motion.div className="absolute inset-0" style={{ opacity }}>
       <Image
         loader={() => img}
         src={img}
@@ -57,11 +72,19 @@ const Backdrop = ({
         unoptimized
         style={{ objectFit: "cover" }}
       />
+      <div className="absolute left-8 max-w-[40%] top-[50%]  p-2">
+        <div className="text-[6rem] font-bold text-white font-montserat overflow-hidden whitespace-nowrap text-ellipsis">
+          {SONG_LIST[index].song.toUpperCase()}
+        </div>
+        <div className="text-[1.5rem] font-semibold text-white font-montserat leading-4 ml-2">
+          {SONG_LIST[index].singer}
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-const MusicCard = ({
+const SmallCard = ({
   index,
   scrollX,
   scrollProgress,
@@ -81,52 +104,45 @@ const MusicCard = ({
     }
   );
 
-  //   const scale = useTransform(
-  //     scrollProgress,
-  //     [(index - 1) * 0.33, index * 0.33, (index + 1) * 0.33],
-  //     [400 * 0.8, 400, 400 * 0.8],
-  //     {
-  //       clamp: true,
-  //     }
-  //   );
-  //   const width = useTransform(
-  //     scrollX,
-  //     [(index - 1) * ITEM_SIZE, index * ITEM_SIZE, (index + 1) * ITEM_SIZE],
-  //     [450, 300, 450],
-  //     {
-  //       clamp: true,
-  //     }
-  //   );
-  //   const height = useTransform(
-  //     scrollX,
-  //     [(index - 1) * ITEM_SIZE, index * ITEM_SIZE, (index + 1) * ITEM_SIZE],
-  //     [600, 400, 600],
-  //     {
-  //       clamp: true,
-  //     }
-  //   );
+  const scale = useTransform(
+    scrollX,
+    [(index - 1) * ITEM_SIZE, index * ITEM_SIZE, (index + 1) * ITEM_SIZE],
+    [0.7, 1, 0.7],
+    {
+      clamp: true,
+    }
+  );
+
   return (
     <motion.div
       style={{
-        opacity,
+        scale,
       }}
-      className={`w-[300px] h-[400px] bg-red-700  flex-grow-0 flex-shrink-0 basis-auto rounded-lg snap-start z-10 overflow-hidden`}
+      className={`relative w-[400px] h-[500px] flex-grow-0 flex-shrink-0 basis-auto rounded-lg z-10 overflow-hidden`}
     >
       <Image
         loader={() => img}
         src={img}
         alt="kuch"
-        width={300}
-        height={400}
+        width={400}
+        height={500}
         unoptimized
         style={{ objectFit: "cover" }}
       />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+
+      <div className="absolute left-4 max-w-[90%] bottom-4 ">
+        <div className="text-[2rem] font-semibold text-white font-montserat ml-2">
+          {SONG_LIST[index].song}
+        </div>
+      </div>
     </motion.div>
   );
 };
 
 function ScrollAnimation() {
-  const carouselRef = useRef(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const { scrollXProgress, scrollX } = useScroll({
     container: carouselRef,
@@ -136,7 +152,18 @@ function ScrollAnimation() {
     setWidth(window.innerWidth);
   }, []);
 
-  scrollXProgress.on("change", (scrollPValue) => console.log({ scrollPValue }));
+  const handleClick = (type: "prev" | "next") => {
+    const currentScrollPosition = scrollX.get();
+    const scrollOffset =
+      type === "next"
+        ? currentScrollPosition + ITEM_SIZE
+        : currentScrollPosition - ITEM_SIZE;
+    carouselRef?.current?.scrollTo({
+      left: scrollOffset,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="relative flex items-center justify-end w-screen h-screen">
       {BACKDROPS.map((backdrop, index) => (
@@ -150,19 +177,35 @@ function ScrollAnimation() {
 
       <div
         ref={carouselRef}
-        className="w-[450px] h-[450px] pr-[150px] space-x-3 flex overflow-x-scroll snap-x snap-mandatory"
+        className="w-[600px] items-center pr-[200px] space-x-3 flex overflow-x-scroll snap-x snap-mandatory"
       >
-        {PLAYER_CARD.map((img, index) => (
-          <AnimatePresence>
-            <MusicCard
-              img={img}
-              key={index}
-              index={index}
-              scrollX={scrollX}
-              scrollProgress={scrollXProgress}
-            />
-          </AnimatePresence>
+        {SMALL_CARDS.map((img, index) => (
+          <SmallCard
+            img={img}
+            key={index}
+            index={index}
+            scrollX={scrollX}
+            scrollProgress={scrollXProgress}
+          />
         ))}
+      </div>
+      <div className="absolute flex bottom-20 left-4 w-[40%] items-center">
+        <p className="mx-2 text-white font-montserat">1:28</p>
+        <div className="flex-1 h-[2px] bg-[rgba(255,255,255,0.3)]"></div>
+        <p className="mx-2 text-white font-montserat">3:28</p>
+        <div
+          onClick={() => handleClick("prev")}
+          className="bg-[rgba(255,255,255,0.3)] w-[60px] h-[60px] rounded-full flex items-center justify-center font-montserat text-white mx-4"
+        >
+          Prev
+        </div>
+
+        <div
+          onClick={() => handleClick("next")}
+          className="bg-[rgba(255,255,255,0.3)] w-[60px] h-[60px] rounded-full flex items-center justify-center font-montserat text-white mx-4"
+        >
+          Next
+        </div>
       </div>
     </div>
   );

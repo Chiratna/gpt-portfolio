@@ -86,10 +86,9 @@ const LoadingScreen = () => {
 
 export default function Home() {
   return (
-    // <div className="relative w-screen h-screen">
-    //   <LoadingScreen />
-    //   <IntroPage />
-    // </div>
-    <ScrollAnimation />
+    <div className="relative w-screen h-screen">
+      <LoadingScreen />
+      <IntroPage />
+    </div>
   );
 }
